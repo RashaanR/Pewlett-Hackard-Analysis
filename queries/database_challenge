@@ -1,0 +1,108 @@
+--creating retire titles
+
+SELECT ee.emp_no,
+	ee.first_name,
+	ee.last_name,
+	ti.title,
+	ti.from_date,
+	ti.to_date
+INTO retire_titles
+FROM employees as ee
+INNER JOIN titles as ti
+ON (ee.emp_no = ti.emp_no)
+WHERE (ee.birth_date BETWEEN '1952-01-01' AND '1955-12-31')
+ORDER BY emp_no;
+
+-- Use Dictinct with Orderby to remove duplicate rows
+SELECT DISTINCT ON (rt.emp_no) rt.emp_no,
+	rt.first_name,
+	rt.last_name,
+	rt.title
+
+INTO Unique_Titles
+FROM retire_titles as rt
+WHERE rt.to_date = ('9999-01-01')
+ORDER BY rt.emp_no, rt.to_date DESC;
+
+
+SELECT COUNT(ut.title),
+	ut.title
+INTO unique_count_titles
+FROM unique_titles as ut
+GROUP BY ut.title
+ORDER BY COUNT(ut.title) DESC;
+
+SELECT DISTINCT ON (ee.emp_no) ee.emp_no,
+	ee.first_name,
+	ee.last_name,
+	ee.birth_date,
+	de.from_date,
+	de.to_date,
+	ti.title
+INTO Membership_ready
+FROM employees as ee
+INNER JOIN dept_emp as de
+ON (ee.emp_no = de.emp_no)
+INNER JOIN titles as ti
+ON (ee.emp_no = ti.emp_no)
+WHERE de.to_date = ('9999-01-01')
+	AND (ee.birth_date BETWEEN '1965-01-01' AND '1965-12-31')
+ORDER BY ee.emp_no;
+
+DROP TABLE Almost_Membership_ready;
+SELECT DISTINCT ON (ee.emp_no) ee.emp_no,
+	ee.first_name,
+	ee.last_name,
+	ee.birth_date,
+	de.from_date,
+	de.to_date,
+	ti.title
+INTO almost_and_is_Membership_ready
+FROM employees as ee
+INNER JOIN dept_emp as de
+ON (ee.emp_no = de.emp_no)
+INNER JOIN titles as ti
+ON (ee.emp_no = ti.emp_no)
+WHERE de.to_date = ('9999-01-01')
+	AND (ee.birth_date BETWEEN '1965-01-01' AND '19663-12-31')
+ORDER BY ee.emp_no;
+
+
+SELECT ee.emp_no,
+	ee.first_name,
+	ee.last_name,
+	ti.title,
+	ti.from_date,
+	ti.to_date
+--no_young_folks_titles
+FROM employees as ee
+INNER JOIN titles as ti
+ON (ee.emp_no = ti.emp_no)
+WHERE ti.to_date = ('9999-01-01')
+	AND (ee.birth_date BETWEEN '1975-01-01' AND '9999-01-01')
+ORDER BY emp_no;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
